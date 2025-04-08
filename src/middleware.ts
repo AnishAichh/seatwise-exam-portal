@@ -4,26 +4,8 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // 🧠 Only protect student dashboard and beyond, not login or register
-    const isStudentProtected =
-        pathname.startsWith('/student') &&
-        pathname !== '/student/login' &&
-        pathname !== '/student/register';
-
-    if (isStudentProtected) {
-        const studentLoggedIn = request.cookies.get('student_logged_in');
-        if (!studentLoggedIn) {
-            const url = request.nextUrl.clone();
-            url.pathname = '/student/login';
-            return NextResponse.redirect(url);
-        }
-    }
-
-    // 🧠 Admin protection (same idea)
-    const isAdminProtected =
-        pathname.startsWith('/admin') && pathname !== '/admin/login';
-
-    if (isAdminProtected) {
+    // Admin protection
+    if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
         const adminLoggedIn = request.cookies.get('admin_logged_in');
         if (!adminLoggedIn) {
             const url = request.nextUrl.clone();
@@ -32,13 +14,23 @@ export function middleware(request: NextRequest) {
         }
     }
 
+    // Student protection
+    if (
+        pathname.startsWith('/student') &&
+        !pathname.startsWith('/student/login') &&
+        !pathname.startsWith('/student/register')
+    ) {
+        const studentLoggedIn = request.cookies.get('student_logged_in');
+        if (!studentLoggedIn) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/student/login';
+            return NextResponse.redirect(url);
+        }
+    }
+
     return NextResponse.next();
 }
 
-// ✅ Only run middleware on these paths:
 export const config = {
-    matcher: [
-        '/admin((?!/login).*)',
-        '/student((?!/(login|register)).*)',
-    ],
+    matcher: ['/admin/:path*', '/student/:path*'], // ✅ this is now valid
 };
