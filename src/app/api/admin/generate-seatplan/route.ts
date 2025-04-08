@@ -1,8 +1,6 @@
-// app/api/admin/generate-seatplan/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/app/lib/db";
 
-// POST /api/admin/generate-seatplan
 export async function POST(req: NextRequest) {
     try {
         const { year } = await req.json();
@@ -11,7 +9,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: false, message: "Year is required" }, { status: 400 });
         }
 
-        // 1. Fetch all students of selected year
         const { rows: students } = await pool.query(
             "SELECT * FROM students WHERE year = $1 ORDER BY name",
             [year]
@@ -25,7 +22,6 @@ export async function POST(req: NextRequest) {
         const seatsPerClassroom = 36;
         let classCounter = 1;
 
-        // 2. Generate FULL classrooms (12 from each dept)
         while (cse.length >= 12 && ce.length >= 12 && me.length >= 12) {
             const block = [
                 ...cse.splice(0, 12),
@@ -44,7 +40,6 @@ export async function POST(req: NextRequest) {
             classCounter++;
         }
 
-        // 3. Combine remaining students for PARTIAL classroom
         const remaining = [...cse, ...ce, ...me];
         if (remaining.length > 0) {
             const partialSeatPlan = generateAntiCheatingLayout(remaining);
@@ -57,7 +52,6 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // 4. Insert all at once using Promise.all
         const insertQuery = `
             INSERT INTO seat_plans (student_roll, classroom, row, seat_column, exam_year, department)
             VALUES ($1, $2, $3, $4, $5, $6)

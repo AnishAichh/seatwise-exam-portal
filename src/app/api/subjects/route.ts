@@ -4,7 +4,7 @@ import pool from '@/app/lib/db';
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const semester = searchParams.get('semester');
-    const category = searchParams.get('category'); // Optional: Theory, Practical, Elective
+    const category = searchParams.get('category');
 
     try {
         const values: any[] = [];

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable'; // Side-effect import for plugin registration
+import 'jspdf-autotable';
 
 interface RoutineEntry {
     subjectCode: string;
@@ -37,7 +37,6 @@ export default function ExamRoutinePage() {
 
                 const allRoutines: SemesterRoutine[] = data.routines || [];
 
-                // Get the routine of the highest semester for the student year
                 const latestRoutine = allRoutines.sort((a, b) => b.semester - a.semester)[0] || null;
 
                 setRoutine(latestRoutine);

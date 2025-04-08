@@ -20,7 +20,6 @@ export default function StudentLogin() {
             });
             const data = await res.json();
             if (data.success) {
-                // Student logged in; redirect to dashboard
                 router.push('/student/dashboard');
             } else {
                 setError(data.message || 'Login failed.');

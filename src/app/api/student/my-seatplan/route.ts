@@ -27,7 +27,6 @@ export async function GET(req: NextRequest) {
         const year = studentResult.rows[0].year;
         console.log('🎓 Student Year:', year);
 
-        // Fetch seat plan
         const seatResult = await pool.query(
             'SELECT * FROM seat_plans WHERE student_roll = $1 AND exam_year = $2',
             [rollNumber, year]

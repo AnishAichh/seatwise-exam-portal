@@ -12,7 +12,6 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        // Query seat_plans for this roll
         const result = await pool.query(
             'SELECT * FROM seat_plans WHERE student_roll = $1',
             [roll]

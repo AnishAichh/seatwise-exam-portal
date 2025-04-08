@@ -5,7 +5,6 @@ export async function POST(req: NextRequest) {
     try {
         const { name, roll_number, department, year, password } = await req.json();
 
-        // Check if roll number already exists
         const checkRes = await pool.query(
             'SELECT * FROM students WHERE roll_number = $1',
             [roll_number]
@@ -17,7 +16,6 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Insert new student (plain password for now; consider hashing in production)
         await pool.query(
             `INSERT INTO students (name, roll_number, department, year, password)
        VALUES ($1, $2, $3, $4, $5)`,

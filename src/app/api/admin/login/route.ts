@@ -14,11 +14,10 @@ export async function POST(req: Request) {
         if (result.rows.length === 1) {
             const response = NextResponse.json({ success: true, message: 'Login successful' });
 
-            // Set a basic cookie to simulate login session
             response.cookies.set('admin_logged_in', 'true', {
                 httpOnly: true,
                 path: '/',
-                maxAge: 60 * 60, // 1 hour
+                maxAge: 60 * 60,
             });
 
             return response;

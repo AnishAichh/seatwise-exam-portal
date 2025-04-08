@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const handleLogout = async () => {
         await fetch('/api/admin/logout', { method: 'POST' });
-        router.push('/'); // Redirect to home page
+        router.push('/');
     };
 
     return (

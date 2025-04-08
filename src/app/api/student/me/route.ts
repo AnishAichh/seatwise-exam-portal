@@ -1,4 +1,3 @@
-// src/app/api/student/me/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/app/lib/db';
 

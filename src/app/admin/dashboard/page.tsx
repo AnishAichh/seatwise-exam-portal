@@ -31,8 +31,6 @@ export default function AdminDashboard() {
                         View
                     </button>
                 </div>
-
-                {/* ✅ New Exam Routine Card */}
                 <div className="bg-white shadow-md p-6 rounded">
                     <h2 className="text-xl font-semibold mb-2">Exam Routine</h2>
                     <p className="text-gray-600">Schedule and publish semester-wise exam dates.</p>
@@ -43,8 +41,6 @@ export default function AdminDashboard() {
                         Schedule
                     </button>
                 </div>
-
-                {/* ✅ New View Exam Routines Card */}
                 <div className="bg-white shadow-md p-6 rounded">
                     <h2 className="text-xl font-semibold mb-2">View Exam Routines</h2>
                     <p className="text-gray-600">Review and delete already published routines.</p>

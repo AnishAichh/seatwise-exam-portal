@@ -1,4 +1,3 @@
-// types/jspdf-autotable.d.ts
 import 'jspdf';
 import 'jspdf-autotable';
 

@@ -37,7 +37,7 @@ export default function StudentDashboard() {
             <h1 className="text-3xl font-bold mb-6">Welcome, {student.name}</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Seat Assignment */}
+
                 <div className="bg-white p-4 rounded shadow">
                     <h2 className="text-xl font-semibold mb-2">Seat Assignment</h2>
                     <p>View where you're seated during the exam.</p>
@@ -50,7 +50,7 @@ export default function StudentDashboard() {
                 </div>
 
 
-                {/* Hall Ticket */}
+
                 <div className="bg-white p-4 rounded shadow">
                     <h2 className="text-xl font-semibold mb-2">Hall Ticket</h2>
                     <p>You can view and download your hall ticket here.</p>
@@ -62,7 +62,6 @@ export default function StudentDashboard() {
                     </a>
                 </div>
 
-                {/* Exam Routine */}
                 <div className="bg-white p-4 rounded shadow">
                     <h2 className="text-xl font-semibold mb-2">Exam Routine</h2>
                     <p>View your upcoming exam routine.</p>
@@ -74,7 +73,7 @@ export default function StudentDashboard() {
                     </a>
                 </div>
 
-                {/* Syllabus */}
+
                 <div className="bg-white p-4 rounded shadow">
                     <h2 className="text-xl font-semibold mb-2">Syllabus</h2>
                     <p>Access your course syllabus and study materials.</p>

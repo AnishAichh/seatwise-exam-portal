@@ -7,11 +7,11 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     const pathname = usePathname();
     const [showSidebar, setShowSidebar] = useState(false);
     const [studentName, setStudentName] = useState('');
-    const [isCheckingAuth, setIsCheckingAuth] = useState(true); // auth loading
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        // ❗ Hide sidebar on /student/login or /student/register
+
         if (pathname === '/student/login' || pathname === '/student/register') {
             setShowSidebar(false);
             setIsCheckingAuth(false);
@@ -44,7 +44,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
         router.push('/');
     };
 
-    if (isCheckingAuth) return null; // or a spinner if preferred
+    if (isCheckingAuth) return null;
 
     return (
         <div className="min-h-screen flex">

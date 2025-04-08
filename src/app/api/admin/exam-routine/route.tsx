@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/app/lib/db'; // adjust if you're using prisma or pg
+import db from '@/app/lib/db'; // a
 import { z } from 'zod';
 
 const RoutineSchema = z.object({
@@ -8,8 +8,8 @@ const RoutineSchema = z.object({
     routine: z.array(
         z.object({
             subject_code: z.string(),
-            date: z.string(), // 'YYYY-MM-DD'
-            start_time: z.string(), // 'HH:mm'
+            date: z.string(),
+            start_time: z.string(),
             end_time: z.string(),
         })
     ),
@@ -26,10 +26,10 @@ export async function POST(req: NextRequest) {
 
         const { semester, routine, isPublished } = parsed.data;
 
-        // Remove old routine for that semester
+
         await db.query('DELETE FROM exam_routines WHERE semester = $1', [semester]);
 
-        // Insert new routine
+
         const insertPromises = routine.map((entry) =>
             db.query(
                 `INSERT INTO exam_routines (semester, subject_code, exam_date, start_time, end_time, is_published)
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     }
 }
 
-// 🗑️ DELETE individual subject from routine
+
 export async function DELETE(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);

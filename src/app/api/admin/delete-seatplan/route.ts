@@ -9,7 +9,6 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ success: false, message: "Year is required" }, { status: 400 });
         }
 
-        // Delete seat plans for the selected year
         const deleteQuery = 'DELETE FROM seat_plans WHERE exam_year = $1';
         await pool.query(deleteQuery, [year]);
 
