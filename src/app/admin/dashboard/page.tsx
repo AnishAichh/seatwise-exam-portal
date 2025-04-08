@@ -31,6 +31,18 @@ export default function AdminDashboard() {
                         View
                     </button>
                 </div>
+
+                {/* ✅ New Exam Routine Card */}
+                <div className="bg-white shadow-md p-6 rounded">
+                    <h2 className="text-xl font-semibold mb-2">Exam Routine</h2>
+                    <p className="text-gray-600">Schedule and publish semester-wise exam dates.</p>
+                    <button
+                        onClick={() => router.push('/admin/exam-routine')}
+                        className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                    >
+                        Schedule
+                    </button>
+                </div>
             </div>
         </div>
     );
