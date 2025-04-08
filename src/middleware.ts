@@ -4,8 +4,11 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Admin protection
-    if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+    // Admin auth
+    if (
+        pathname.startsWith('/admin') &&
+        !pathname.startsWith('/admin/login')
+    ) {
         const adminLoggedIn = request.cookies.get('admin_logged_in');
         if (!adminLoggedIn) {
             const url = request.nextUrl.clone();
@@ -14,11 +17,12 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // Student protection
+    // Student auth — protect only dashboard and other secure pages
     if (
-        pathname.startsWith('/student') &&
-        !pathname.startsWith('/student/login') &&
-        !pathname.startsWith('/student/register')
+        pathname.startsWith('/student/dashboard') ||
+        pathname.startsWith('/student/profile') ||
+        pathname.startsWith('/student/seat') ||
+        pathname.startsWith('/student/hallticket') // Add more protected pages here
     ) {
         const studentLoggedIn = request.cookies.get('student_logged_in');
         if (!studentLoggedIn) {
