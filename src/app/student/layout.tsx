@@ -11,13 +11,14 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     const router = useRouter();
 
     useEffect(() => {
-        const checkAuth = async () => {
-            if (pathname === '/student/login') {
-                setShowSidebar(false);
-                setIsCheckingAuth(false);
-                return;
-            }
+        // ❗ Hide sidebar on /student/login or /student/register
+        if (pathname === '/student/login' || pathname === '/student/register') {
+            setShowSidebar(false);
+            setIsCheckingAuth(false);
+            return;
+        }
 
+        const checkAuth = async () => {
             try {
                 const res = await fetch('/api/student/me');
                 const data = await res.json();
