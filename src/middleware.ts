@@ -4,6 +4,9 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // Normalize path to remove trailing slashes
+    const cleanPath = pathname.replace(/\/+$/, '');
+
     // Admin protection
     if (
         pathname.startsWith('/admin') &&
@@ -17,12 +20,17 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // Student protection
-    const isStudentAuthRoute = ['/student/login', '/student/register'];
-    const isStudentProtected = pathname.startsWith('/student') &&
-        !isStudentAuthRoute.some((publicPath) => pathname.startsWith(publicPath));
+    // Public student pages
+    const publicStudentPaths = new Set([
+        '/student/login',
+        '/student/register',
+        '/student/forgot-password', // if needed
+    ]);
 
-    if (isStudentProtected) {
+    const isProtectedStudentRoute =
+        pathname.startsWith('/student') && !publicStudentPaths.has(cleanPath);
+
+    if (isProtectedStudentRoute) {
         const studentLoggedIn = request.cookies.get('student_logged_in');
         if (!studentLoggedIn) {
             const url = request.nextUrl.clone();
