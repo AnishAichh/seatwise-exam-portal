@@ -5,27 +5,45 @@ import { useEffect, useState } from 'react';
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const [showSidebar, setShowSidebar] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
     const [studentName, setStudentName] = useState('');
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true); // auth loading
     const router = useRouter();
 
     useEffect(() => {
-        if (pathname === '/student/login') {
-            setShowSidebar(false);
-        } else {
-            setShowSidebar(true);
-            fetch('/api/student/me')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.student) setStudentName(data.student.name);
-                });
-        }
-    }, [pathname]);
+        const checkAuth = async () => {
+            if (pathname === '/student/login') {
+                setShowSidebar(false);
+                setIsCheckingAuth(false);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/student/me');
+                const data = await res.json();
+
+                if (data.student) {
+                    setStudentName(data.student.name);
+                    setShowSidebar(true);
+                } else {
+                    router.push('/student/login');
+                }
+            } catch (err) {
+                router.push('/student/login');
+            } finally {
+                setIsCheckingAuth(false);
+            }
+        };
+
+        checkAuth();
+    }, [pathname, router]);
 
     const handleLogout = async () => {
         await fetch('/api/student/logout');
         router.push('/');
     };
+
+    if (isCheckingAuth) return null; // or a spinner if preferred
 
     return (
         <div className="min-h-screen flex">
