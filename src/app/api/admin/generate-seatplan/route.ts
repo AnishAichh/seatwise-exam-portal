@@ -1,3 +1,4 @@
+// app/api/admin/generate-seatplan/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/app/lib/db";
 
@@ -56,26 +57,28 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // 4. Insert into seat_plans table
+        // 4. Insert all at once using Promise.all
         const insertQuery = `
             INSERT INTO seat_plans (student_roll, classroom, row, seat_column, exam_year, department)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
 
-        for (const seat of classrooms) {
-            await pool.query(insertQuery, [
-                seat.student_roll,
-                seat.classroom,
-                seat.row,
-                seat.seat_column,
-                seat.exam_year,
-                seat.department,
-            ]);
-        }
+        await Promise.all(
+            classrooms.map(seat =>
+                pool.query(insertQuery, [
+                    seat.student_roll,
+                    seat.classroom,
+                    seat.row,
+                    seat.seat_column,
+                    seat.exam_year,
+                    seat.department,
+                ])
+            )
+        );
 
         return NextResponse.json({
             success: true,
-            message: `Seat plan generated for Year ${year}. ${classCounter - 1} full classroom(s) and ${remaining.length > 0 ? 1 : 0} partial classroom.`,
+            message: `✅ Seat plan generated for Year ${year}. ${classCounter - 1} full classroom(s) and ${remaining.length > 0 ? 1 : 0} partial classroom.`,
         });
 
     } catch (error) {
@@ -84,7 +87,6 @@ export async function POST(req: NextRequest) {
     }
 }
 
-// 🧠 Flexible anti-cheating layout generator
 function generateAntiCheatingLayout(students: any[]) {
     const basePattern = [
         [0, 0], [0, 2], [0, 4],
@@ -110,10 +112,9 @@ function generateAntiCheatingLayout(students: any[]) {
         layout.push({
             row: r + 1,
             seat_column: c + 1,
-            student_roll: student.roll_number, // ✅ Correct field from students table
+            student_roll: student.roll_number,
             department: student.department,
         });
-
     }
 
     return layout;
