@@ -14,6 +14,7 @@ type RoutineEntry = {
     date: string;
     start_time: string;
     end_time: string;
+    subject_name?: string;
 };
 
 export default function ExamRoutineAdminPage() {
@@ -32,6 +33,7 @@ export default function ExamRoutineAdminPage() {
                 setRoutine(
                     data.subjects.map((sub: Subject) => ({
                         subject_code: sub.subject_code,
+                        subject_name: sub.subject_name,
                         date: '',
                         start_time: '',
                         end_time: '',
@@ -59,7 +61,16 @@ export default function ExamRoutineAdminPage() {
         const res = await fetch('/api/admin/exam-routine', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ semester, routine, isPublished: false }),
+            body: JSON.stringify({
+                semester,
+                routine: routine.map(({ subject_code, date, start_time, end_time }) => ({
+                    subject_code,
+                    date,
+                    start_time,
+                    end_time,
+                })),
+                isPublished: false,
+            }),
         });
         const data = await res.json();
         setMessage(data.message || 'Routine saved successfully!');
@@ -70,7 +81,16 @@ export default function ExamRoutineAdminPage() {
         const res = await fetch('/api/admin/exam-routine', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ semester, routine, isPublished: true }),
+            body: JSON.stringify({
+                semester,
+                routine: routine.map(({ subject_code, date, start_time, end_time }) => ({
+                    subject_code,
+                    date,
+                    start_time,
+                    end_time,
+                })),
+                isPublished: true,
+            }),
         });
         const data = await res.json();
         setMessage(data.message || 'Routine published successfully!');
@@ -90,6 +110,19 @@ export default function ExamRoutineAdminPage() {
 
         setRoutine((prev) => prev.filter((r) => r.subject_code !== subjectCode));
         setSubjects((prev) => prev.filter((s) => s.subject_code !== subjectCode));
+    };
+
+    const handleAddManualSubject = () => {
+        setRoutine((prev) => [
+            ...prev,
+            {
+                subject_code: '',
+                subject_name: '',
+                date: '',
+                start_time: '',
+                end_time: '',
+            },
+        ]);
     };
 
     return (
@@ -124,14 +157,28 @@ export default function ExamRoutineAdminPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {subjects.map((subject, index) => (
-                            <tr key={subject.subject_code} className="border-t hover:bg-gray-50">
-                                <td className="px-4 py-2">{subject.subject_code}</td>
-                                <td className="px-4 py-2">{subject.subject_name}</td>
+                        {routine.map((entry, index) => (
+                            <tr key={index} className="border-t hover:bg-gray-50">
+                                <td className="px-4 py-2">
+                                    <input
+                                        type="text"
+                                        value={entry.subject_code}
+                                        onChange={(e) => handleRoutineChange(index, 'subject_code', e.target.value)}
+                                        className="border rounded-md px-2 py-1 w-full"
+                                    />
+                                </td>
+                                <td className="px-4 py-2">
+                                    <input
+                                        type="text"
+                                        value={entry.subject_name || ''}
+                                        onChange={(e) => handleRoutineChange(index, 'subject_name', e.target.value)}
+                                        className="border rounded-md px-2 py-1 w-full"
+                                    />
+                                </td>
                                 <td className="px-4 py-2">
                                     <input
                                         type="date"
-                                        value={routine[index]?.date || ''}
+                                        value={entry.date}
                                         onChange={(e) => handleRoutineChange(index, 'date', e.target.value)}
                                         className="border rounded-md px-2 py-1 w-full"
                                     />
@@ -139,7 +186,7 @@ export default function ExamRoutineAdminPage() {
                                 <td className="px-4 py-2">
                                     <input
                                         type="time"
-                                        value={routine[index]?.start_time || ''}
+                                        value={entry.start_time}
                                         onChange={(e) => handleRoutineChange(index, 'start_time', e.target.value)}
                                         className="border rounded-md px-2 py-1 w-full"
                                     />
@@ -147,14 +194,14 @@ export default function ExamRoutineAdminPage() {
                                 <td className="px-4 py-2">
                                     <input
                                         type="time"
-                                        value={routine[index]?.end_time || ''}
+                                        value={entry.end_time}
                                         onChange={(e) => handleRoutineChange(index, 'end_time', e.target.value)}
                                         className="border rounded-md px-2 py-1 w-full"
                                     />
                                 </td>
                                 <td className="px-4 py-2">
                                     <button
-                                        onClick={() => handleDelete(subject.subject_code)}
+                                        onClick={() => handleDelete(entry.subject_code)}
                                         className="text-red-600 hover:underline"
                                     >
                                         🗑️ Delete
@@ -167,6 +214,12 @@ export default function ExamRoutineAdminPage() {
             </div>
 
             <div className="flex gap-4 mt-6">
+                <button
+                    onClick={handleAddManualSubject}
+                    className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-md shadow"
+                >
+                    ➕ Add Subject Manually
+                </button>
                 <button
                     onClick={handleSave}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow"

@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <Link href="/admin/view-seatplan" className="block hover:text-blue-400">View Seat Plan</Link>
                         <Link href="/admin/generate-seatplan" className="block hover:text-blue-400">Generate Seat Plan</Link>
                         <Link href="/admin/exam-routine" className="block hover:text-blue-400">Exam Routine</Link>
+                        <Link href="/admin/view-routines" className="block hover:text-blue-400">View Exam Routines</Link>
                         <Link href="/admin/other" className="block hover:text-blue-400">Other Features</Link>
 
                         <button
