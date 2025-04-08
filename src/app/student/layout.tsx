@@ -24,7 +24,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
     const handleLogout = async () => {
         await fetch('/api/student/logout');
-        router.push('/student/login');
+        router.push('/');
     };
 
     return (
